@@ -20,9 +20,9 @@ const initialValues = {
 export const ContactForm = ({ addContact }) => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const [id, setId] = useState(() => nanoid());
 
   const onSubmit = () => {
+    const id = nanoid();
     addContact({ name, number, id });
   };
 
