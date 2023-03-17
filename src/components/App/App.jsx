@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { ContactForm } from 'components/ContactForm/ContactForm';
@@ -8,77 +8,77 @@ import { ContactList } from 'components/ContactList/ContactList';
 import { Container, Title, SubTitle } from 'components/App/App.styled';
 
 const LS_KEY = 'contacts';
+const testContacts = [
+  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+];
 
-export default class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+export default function App() {
+  const [contacts, setContacts] = useState(() =>
+    localStorage.getItem(LS_KEY)
+      ? JSON.parse(localStorage.getItem(LS_KEY))
+      : testContacts
+  );
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    if (JSON.parse(localStorage.getItem(LS_KEY))) {
-      this.setState({ contacts: JSON.parse(localStorage.getItem(LS_KEY)) });
+  useEffect(() => {
+    const savedContacts = JSON.parse(localStorage.getItem(LS_KEY));
+    if (savedContacts) {
+      setContacts(savedContacts);
     }
-  }
+  }, []);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem(LS_KEY, JSON.stringify(contacts));
+    return () => {
+      localStorage.setItem(LS_KEY, JSON.stringify(contacts));
+    };
+  }, [contacts]);
 
-  addContact = contact => {
-    const names = this.state.contacts.map(item => item.name);
+  const addContact = contact => {
+    const names = contacts.map(item => item.name);
 
     if (names.some(name => name.toLowerCase() === contact.name.toLowerCase())) {
       alert(`${contact.name} is already in contacts.`);
     } else {
-      this.setState({ contacts: [...this.state.contacts, contact] });
+      setContacts([...contacts, contact]);
     }
   };
 
-  deleteContact = contact => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(item => item.name !== contact),
-    }));
-  };
-
-  filterContacts = value => {
-    this.setState({ filter: value });
-  };
-
-  render() {
-    const { filter } = this.state;
-
-    const filteredContacts = this.state.contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase())
+  const deleteContact = contactName => {
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.name !== contactName)
     );
+  };
 
-    return (
-      <Container>
-        <Title>Phonebook</Title>
-        <ContactForm addContact={this.addContact} filter={this.state.filter} />
-        <SubTitle>Contacts</SubTitle>
-        <Filter
-          filter={this.state.filter}
-          filterContacts={this.filterContacts}
+  const filterContacts = value => {
+    setFilter(value);
+  };
+
+  const filteredContacts = contacts.filter(
+    contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase()) ||
+      contact.number.includes(filter)
+  );
+
+  return (
+    <Container>
+      <Title>Phonebook</Title>
+      <ContactForm addContact={addContact} filter={filter} />
+      <SubTitle>Contacts</SubTitle>
+      <Filter filter={filter} filterContacts={filterContacts} />
+      {contacts.length > 0 ? (
+        <ContactList
+          contacts={filteredContacts}
+          deleteContact={deleteContact}
         />
-        {this.state.contacts.length > 0 ? (
-          <ContactList
-            contacts={filteredContacts}
-            deleteContact={this.deleteContact}
-          />
-        ) : (
-          <p style={{ textAlign: 'center' }}>Don't have contacts...</p>
-        )}
-      </Container>
-    );
-  }
+      ) : (
+        <p style={{ textAlign: 'center' }}>Don't have contacts...</p>
+      )}
+    </Container>
+  );
 }
 
 App.propTypes = {

@@ -1,4 +1,4 @@
-import { ContactListItems } from 'components/ContactList/ContactListItems';
+import { ContactListItems } from 'components/ContactListItems/ContactListItems';
 
 import { ContactUl } from 'components/ContactList/ContactList.styled';
 
