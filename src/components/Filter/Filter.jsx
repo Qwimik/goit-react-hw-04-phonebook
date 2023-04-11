@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import {
   FilterLabel,
   FilterSpan,
@@ -21,4 +23,9 @@ export const Filter = ({ filter, filterContacts }) => {
       </FilterLabel>
     </div>
   );
+};
+
+Filter.propTypes = {
+  filter: PropTypes.string.isRequired,
+  filterContacts: PropTypes.func.isRequired,
 };

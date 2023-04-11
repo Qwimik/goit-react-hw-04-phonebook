@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 
 import { ContactForm } from 'components/ContactForm/ContactForm';
 import { Filter } from 'components/Filter/Filter';
@@ -66,7 +65,7 @@ export default function App() {
   return (
     <Container>
       <Title>Phonebook</Title>
-      <ContactForm addContact={addContact} filter={filter} />
+      <ContactForm addContact={addContact} />
       <SubTitle>Contacts</SubTitle>
       <Filter filter={filter} filterContacts={filterContacts} />
       {contacts.length > 0 ? (
@@ -80,14 +79,3 @@ export default function App() {
     </Container>
   );
 }
-
-App.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      number: PropTypes.string,
-    })
-  ),
-  filter: PropTypes.string,
-};

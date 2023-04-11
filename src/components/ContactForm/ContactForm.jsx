@@ -1,21 +1,15 @@
 // import { Formik, Form } from 'formik';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-import { Input } from 'components/ContactForm/FormInputName.styled';
+import PropTypes from 'prop-types';
 
+import { Input } from 'components/ContactForm/FormInputName.styled';
 import {
   FormLabel,
   LabelSpan,
   BtnSubmit,
 } from 'components/ContactForm/ContactForm.styled';
-
-const initialValues = {
-  name: '',
-  number: '',
-  id: '',
-};
 
 export const ContactForm = ({ addContact }) => {
   const [name, setName] = useState('');
@@ -59,8 +53,6 @@ export const ContactForm = ({ addContact }) => {
   );
 };
 
-initialValues.propTypes = {
-  id: PropTypes.string,
-  name: PropTypes.string,
-  number: PropTypes.string,
+ContactForm.propTypes = {
+  addContact: PropTypes.func.isRequired,
 };
