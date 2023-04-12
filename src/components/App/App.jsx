@@ -31,9 +31,6 @@ export default function App() {
 
   useEffect(() => {
     localStorage.setItem(LS_KEY, JSON.stringify(contacts));
-    return () => {
-      localStorage.setItem(LS_KEY, JSON.stringify(contacts));
-    };
   }, [contacts]);
 
   const addContact = contact => {
